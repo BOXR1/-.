@@ -1,0 +1,747 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨🔒 شَهدْ صَبـاحْ 🔒 ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Marhey:wght@400;700&family=Amiri:wght@400;700&family=Cairo:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #D8BFD8 0%, #FFB6C1 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .font-signature {
+            font-family: 'Marhey', cursive;
+        }
+
+        .font-serif {
+            font-family: 'Amiri', serif;
+        }
+
+        /* Loading Screen */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #D8BFD8 0%, #FFB6C1 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        #loadingScreen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-emoji {
+            font-size: 5rem;
+            animation: pulse-scale 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-scale {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% { 
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+        }
+
+        .loader-text {
+            font-size: 1.5rem;
+            color: white;
+            margin-top: 1rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(139, 95, 191, 0.4);
+        }
+
+        .loader-spinner {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .loader-dot {
+            width: 0.75rem;
+            height: 0.75rem;
+            background: white;
+            border-radius: 50%;
+            animation: bounce-dot 1.4s infinite ease-in-out both;
+        }
+
+        .loader-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loader-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce-dot {
+            0%, 80%, 100% { 
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .loader-progress {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+
+        .loader-progress-bar {
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            animation: progress 2s ease-in-out;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes progress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* Password Protection Screen */
+        #passwordScreen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.2;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .password-card {
+            background: linear-gradient(135deg, rgba(248, 240, 255, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%);
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 40px rgba(139, 95, 191, 0.3);
+            max-width: 28rem;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .lock-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .password-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #8B5FBF;
+            margin-bottom: 0.5rem;
+        }
+
+        .password-subtitle {
+            font-size: 1.125rem;
+            color: #FF69B4;
+            margin-bottom: 1.5rem;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #D8BFD8;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #8B5FBF;
+        }
+
+        .password-input.error {
+            border-color: #ef4444;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .password-button {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #8B5FBF 0%, #E6B3FF 100%);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .password-button:hover {
+            opacity: 0.9;
+        }
+
+        .emoji-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .emoji-row span {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Content */
+        #mainContent {
+            display: none;
+        }
+
+        .main-container {
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #D8BFD8 0%, #FFB6C1 100%);
+            padding: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content {
+            max-width: 72rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .time-display {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 9999px;
+            box-shadow: 0 2px 10px rgba(139, 95, 191, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .time-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #8B5FBF;
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .profile-image {
+            width: 8rem;
+            height: 8rem;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.5);
+            margin: 0.75rem auto;
+            display: block;
+        }
+
+        .main-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(139, 95, 191, 0.4);
+            margin-top: 0.75rem;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 0.25rem;
+        }
+
+        .content-section {
+            flex: 1;
+            overflow-y: auto;
+            background: #f5f5f5;
+        }
+
+        .content-wrapper {
+            max-width: 72rem;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, rgba(248, 240, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(139, 95, 191, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(139, 95, 191, 0.2);
+        }
+
+        .info-emoji {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #8B5FBF;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 0.75rem;
+            color: rgba(0, 0, 0, 0.7);
+            line-height: 1.4;
+        }
+
+        .poetry-section {
+            background: linear-gradient(135deg, #E6B3FF 0%, #FFE5F0 100%);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 16px rgba(230, 179, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poetry-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-align: center;
+            color: #8B5FBF;
+            margin-bottom: 0.75rem;
+        }
+
+        .poetry-text {
+            text-align: center;
+            line-height: 1.8;
+            color: #4A4A4A;
+        }
+
+        .poetry-text p {
+            margin-bottom: 0.25rem;
+        }
+
+        .poetry-highlight {
+            font-size: 1.125rem;
+            font-weight: bold;
+            color: #FF69B4;
+        }
+
+        .footer-section {
+            background: linear-gradient(135deg, #D8BFD8 0%, #FFB6C1 100%);
+            padding: 0.75rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-emojis {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* تحسينات الاستجابة للشاشات الصغيرة */
+        @media (max-width: 480px) {
+            .password-card {
+                padding: 2rem 1.5rem;
+            }
+            .password-title {
+                font-size: 1.5rem;
+            }
+            .main-title {
+                font-size: 1.5rem;
+            }
+            .subtitle {
+                font-size: 0.875rem;
+            }
+            .info-card {
+                padding: 0.5rem;
+            }
+            .info-emoji {
+                font-size: 1.25rem;
+            }
+            .info-label {
+                font-size: 0.7rem;
+            }
+            .info-value {
+                font-size: 0.65rem;
+            }
+            .floating-emoji {
+                font-size: 2rem;
+            }
+            .poetry-section {
+                padding: 0.75rem;
+            }
+            .loader-emoji {
+                font-size: 3.5rem;
+            }
+            .loader-text {
+                font-size: 1.125rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .profile-image {
+                width: 10rem;
+                height: 10rem;
+            }
+            .main-title {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1.125rem;
+            }
+            .poetry-title {
+                font-size: 1.5rem;
+            }
+            .poetry-text {
+                font-size: 1.125rem;
+            }
+        }
+
+        /* تحسين سرعة التحميل */
+        img {
+            image-rendering: auto;
+            image-rendering: -webkit-optimize-contrast;
+        }
+        
+        img[loading="lazy"] {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        img[loading="lazy"].loaded {
+            opacity: 1;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <div class="loader-content">
+            <div class="loader-emoji">✨💜</div>
+            <div class="loader-text font-signature">جاري التحميل...</div>
+            <div class="loader-spinner">
+                <div class="loader-dot"></div>
+                <div class="loader-dot"></div>
+                <div class="loader-dot"></div>
+            </div>
+            <div class="loader-progress">
+                <div class="loader-progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Protection Screen -->
+    <div id="passwordScreen">
+        <!-- Floating Emojis -->
+        <div class="floating-emoji" style="top: 5rem; right: 5rem;">✨</div>
+        <div class="floating-emoji" style="top: 10rem; left: 5rem; animation-delay: 0.5s;">💕</div>
+        <div class="floating-emoji" style="bottom: 10rem; right: 10rem; animation-delay: 1s;">🌸</div>
+        <div class="floating-emoji" style="top: 15rem; left: 10rem; animation-delay: 1.5s;">💜</div>
+        <div class="floating-emoji" style="bottom: 5rem; left: 15rem; animation-delay: 2s;">🔒</div>
+        <div class="floating-emoji" style="top: 8rem; right: 15rem; animation-delay: 2.5s;">🌹</div>
+
+        <div class="password-card">
+            <div class="lock-icon">🔒</div>
+            <h1 class="password-title font-signature">ممنوع الدخول</h1>
+            <p class="password-subtitle font-serif">إلا بكلمة المرور 💜</p>
+            <form id="passwordForm">
+                <input type="password" id="passwordInput" class="password-input" placeholder="أدخل كلمة المرور">
+                <div id="errorMessage" class="error-message hidden">❌ كلمة المرور خاطئة، حاول مرة أخرى</div>
+                <button type="submit" class="password-button">دخول ✨</button>
+            </form>
+            <div class="emoji-row">
+                <span style="animation-delay: 0s;">💜</span>
+                <span style="animation-delay: 0.2s;">🌸</span>
+                <span style="animation-delay: 0.4s;">✨</span>
+                <span style="animation-delay: 0.6s;">💕</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="main-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="floating-emoji" style="top: 0.5rem; right: 2.5rem; font-size: 2rem;">✨</div>
+            <div class="floating-emoji" style="top: 0.75rem; left: 2.5rem; font-size: 2rem; animation-delay: 0.5s;">💕</div>
+            <div class="floating-emoji" style="bottom: 0.5rem; right: 25%; font-size: 1.5rem; animation-delay: 1s;">🌸</div>
+            <div class="floating-emoji" style="top: 50%; left: 2.5rem; font-size: 2rem; animation-delay: 1.5s;">💜</div>
+
+            <div class="header-content">
+                <div class="time-display">
+                    <div class="time-text">🕐 <span id="currentTime">00:00:00</span></div>
+                    <div class="time-label">توقيت العراق</div>
+                </div>
+                <img src="https://i.ibb.co/jZhFyWVW/IMG-20251102-155906-514.jpg" alt="شهد صباح" class="profile-image" loading="lazy">
+                <div class="main-title font-signature">✨🔒 شَهدْ صَبـاحْ 🔒 ✨</div>
+                <div class="subtitle font-serif">💞 هي مو بس بنتي.. هي قصيدة مضمّخة بالعطر والحياء تمشي وكأن النسمة تمشي وياها 🫰</div>
+            </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="content-section">
+            <div class="content-wrapper">
+                <!-- Info Grid -->
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-emoji">🥰</div>
+                        <div class="info-label">مواليد</div>
+                        <div class="info-value">2008 / 1 / 11</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-emoji">💜</div>
+                        <div class="info-label">اللون المفضل</div>
+                        <div class="info-value">بنفسجي رايق مثل عيونها</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-emoji">🌸</div>
+                        <div class="info-label">الطول</div>
+                        <div class="info-value">160 سـم من الأنوثة النادرة</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-emoji">💫</div>
+                        <div class="info-label">الوزن</div>
+                        <div class="info-value">50 كِغ من الدلال والحنان</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-emoji">🍔</div>
+                        <div class="info-label">أكلتها المفضّلة</div>
+                        <div class="info-value">ريزو يطبخونه، بس ما أحد يعرف طعمها مثلها</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-emoji">🏙️</div>
+                        <div class="info-label">مكانها المفضّل</div>
+                        <div class="info-value">كربلاء .. لأن الطيبة هناك تشبهها</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-emoji">👗</div>
+                        <div class="info-label">لبسها المفضل</div>
+                        <div class="info-value">أي شي تلبسه يصير حلو عليها</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-emoji">🎨</div>
+                        <div class="info-label">هواياتها</div>
+                        <div class="info-value">تطبخ بحنية ترسم بخجل وتخيط بخفّة ملاك</div>
+                    </div>
+                </div>
+
+                <!-- Poetry Section -->
+                <div class="poetry-section">
+                    <div class="floating-emoji" style="top: 0.5rem; right: 0.5rem; font-size: 1.5rem; opacity: 0.3;">💕</div>
+                    <div class="floating-emoji" style="bottom: 0.5rem; left: 0.5rem; font-size: 1.5rem; opacity: 0.3; animation-delay: 0.5s;">🌹</div>
+                    <h2 class="poetry-title font-serif">🌙 أبـوذِيـة 🌙</h2>
+                    <div class="poetry-text font-serif">
+                        <p>شهد ليل الحزن وانهـد شهدنه 🌧️</p>
+                        <p>وشهَد حلوه وبدونَه شهدنه ✨</p>
+                        <p class="poetry-highlight">جرحها ورد ومن نظرتها شهدنَه 💔</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer-section">
+            <div class="floating-emoji" style="top: 0.25rem; right: 25%; font-size: 1.5rem;">💜</div>
+            <div class="floating-emoji" style="bottom: 0.25rem; left: 25%; font-size: 1.5rem; animation-delay: 0.5s;">🌸</div>
+            <div class="footer-emojis">
+                <span>✨</span>
+                <span>💜</span>
+                <span>🌸</span>
+                <span>💕</span>
+                <span>✨</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Loading Screen Management
+        const loadingScreen = document.getElementById('loadingScreen');
+        
+        // إخفاء شاشة التحميل بعد تحميل الصفحة بالكامل
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                loadingScreen.classList.add('fade-out');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 1500); // 1.5 ثانية لعرض انيميشن التحميل
+        });
+
+        // Lazy Loading للصور
+        document.addEventListener('DOMContentLoaded', function() {
+            const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+            
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.classList.add('loaded');
+                            observer.unobserve(img);
+                        }
+                    });
+                });
+
+                lazyImages.forEach(img => {
+                    imageObserver.observe(img);
+                });
+            } else {
+                // للمتصفحات القديمة
+                lazyImages.forEach(img => {
+                    img.classList.add('loaded');
+                });
+            }
+        });
+
+        // Password Protection
+        const passwordForm = document.getElementById('passwordForm');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMessage = document.getElementById('errorMessage');
+        const passwordScreen = document.getElementById('passwordScreen');
+        const mainContent = document.getElementById('mainContent');
+
+        // Check if already authenticated
+        if (sessionStorage.getItem('authenticated') === 'true') {
+            passwordScreen.classList.add('hidden');
+            mainContent.style.display = 'flex';
+            startClock();
+        }
+
+        passwordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = passwordInput.value.trim();
+            
+            console.log('كلمة المرور المدخلة:', password);
+            
+            if (password === 'S 2002' || password === 'S2002') {
+                console.log('كلمة المرور صحيحة! جاري الدخول...');
+                sessionStorage.setItem('authenticated', 'true');
+                passwordScreen.style.display = 'none';
+                mainContent.style.display = 'flex';
+                startClock();
+            } else {
+                console.log('كلمة المرور خاطئة');
+                errorMessage.classList.remove('hidden');
+                passwordInput.classList.add('error');
+                passwordInput.value = '';
+                
+                setTimeout(() => {
+                    errorMessage.classList.add('hidden');
+                    passwordInput.classList.remove('error');
+                }, 2000);
+            }
+        });
+
+        // Clock Function
+        function updateClock() {
+            const now = new Date();
+            const iraqTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Baghdad" }));
+            const hours = iraqTime.getHours().toString().padStart(2, '0');
+            const minutes = iraqTime.getMinutes().toString().padStart(2, '0');
+            const seconds = iraqTime.getSeconds().toString().padStart(2, '0');
+            
+            const timeElement = document.getElementById('currentTime');
+            if (timeElement) {
+                timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+            }
+        }
+
+        function startClock() {
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+    </script>
+</body>
+</html>
